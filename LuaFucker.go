@@ -13,9 +13,10 @@ type LuaConfig struct {
 	url     string
 	header  string
 	system  string
+	posrt   string
 }
 
-func Init() {
+func InitLuaConfig() {
 	L := lua.NewState()
 	if err := L.DoFile("ConfigTest.lua"); err != nil {
 		fmt.Print("Загрузка Lua файла", err)
@@ -26,9 +27,11 @@ func Init() {
 
 	header := L.GetGlobal("headermessage").(lua.LString)
 	system := L.GetGlobal("systempromt").(lua.LString)
+	port := L.GetGlobal("port").(lua.LString)
 
 	cfg.message = string(msg)
 	cfg.url = string(url)
 	cfg.system = string(system)
 	cfg.header = string(header)
+	cfg.posrt = string(port)
 }

@@ -15,11 +15,13 @@ import (
 
 func main() {
 	// Create form data with multiple fields
-	Init()
+	InitLuaConfig()
+	ServerUp()
+}
 
+func Quest(quest string) {
 	var builder strings.Builder
 
-	var quest = "кто ты"
 	var QuestString = `{ "role": "user", "content": ` + "\"" + quest + "\"" + "}"
 
 	file, err := os.OpenFile("history.cfg", os.O_APPEND|os.O_RDWR, 0600)
@@ -44,18 +46,22 @@ func main() {
 	builder.WriteString(cfg.system + "\n")
 	builder.WriteString(history)
 	builder.WriteString(QuestString)
-	builder.WriteString("],")
+	builder.WriteString("\n],")
 	builder.WriteString("\n" + cfg.header)
 	builder.WriteString("\n}")
 	result := builder.String()
+
 	// fmt.Print(result)
 	Ansver, errAnsver := GetSend(result)
 	if errAnsver != nil {
 		panic(errAnsver)
 	}
+	//тут кароче надо отправить ответ что заокнчило читать
+	fmt.Print("<1!Endt-Call>EndBott")
 	var AnsverSaveString = `{ "role": "assistant", "content": ` + "\"" + Ansver + "\"" + "}"
 	file.WriteString(QuestString + ",\n")
 	file.WriteString(AnsverSaveString + ",\n")
+
 }
 
 func GetSend(message string) (string, error) {
@@ -70,7 +76,7 @@ func GetSend(message string) (string, error) {
 	//     "stream": true
 	// }`
 	// скорее всего стрим нужен кок раз таки для эфекта печатной машинки
-	var url = "http://192.168.0.191:1234/v1/chat/completions"
+	var url = "http://26.70.168.18:1234/v1/chat/completions"
 	// Send POST request
 	client := &http.Client{}
 
@@ -119,6 +125,7 @@ func listenToSSEStream(resp *http.Response) (string, error) {
 				fmt.Println()
 				continue
 			}
+			// fmt.Println(match[1])
 			fmt.Print(match[1])
 			FullString += match[1]
 		}
