@@ -25,8 +25,9 @@ func handleConnection(conn net.Conn) {
 		fmt.Println("<!UNIIDHIDEC#RESKODLikeUVB76>")
 	} else if text == "<!WermaPOajaxzaca21!>" {
 		fmt.Println("<!WermaPOajaxzaca21!>")
+	} else {
+		Quest(text)
 	}
-	Quest(text)
 
 	// // Отправляем ответ клиенту
 	// _, err = conn.Write([]byte("Hello from server!"))
