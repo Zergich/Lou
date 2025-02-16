@@ -58,7 +58,13 @@ func Quest(quest string) {
 	}
 	//тут кароче надо отправить ответ что заокнчило читать
 	fmt.Print("<1!Endt-Call>EndBott")
-	var AnsverSaveString = `{ "role": "assistant", "content": ` + "\"" + Ansver + "\"" + "}"
+
+	// errFile := os.WriteFile("1.json", []byte(result), 0644)
+	// if errFile != nil {
+	// 	fmt.Println("Ошибка записи файла:", errFile)
+	// }
+
+	var AnsverSaveString = `{ "role": "assistant", "content": ` + "\"" + strings.Replace(Ansver, "\\", "\\\\", -1) + "\"" + "}"
 	file.WriteString(QuestString + ",\n")
 	file.WriteString(AnsverSaveString + ",\n")
 
