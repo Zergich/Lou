@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Pastel;
@@ -31,30 +32,33 @@ namespace LouConsoleUI
 
         static void Main(string[] args)
         {
-            AppDomain.CurrentDomain.ProcessExit += new EventHandler(CurrentDomain_ProcessExit);
-            Console.CancelKeyPress += Console_CancelKeyPress;
+            Console_CancelKeyPress();
+            //AppDomain.CurrentDomain.ProcessExit += new EventHandler(CurrentDomain_ProcessExit);
+            //Console.CancelKeyPress += Console_CancelKeyPress;
 
 
 
-            IntPtr handle = GetConsoleWindow();
-            IntPtr sysMenu = GetSystemMenu(handle, false);
+            //IntPtr handle = GetConsoleWindow();
+            //IntPtr sysMenu = GetSystemMenu(handle, false);
 
-            if (handle != IntPtr.Zero)
-            {
-                DeleteMenu(sysMenu, SC_CLOSE, MF_BYCOMMAND);
-                //DeleteMenu(sysMenu, SC_MINIMIZE, MF_BYCOMMAND);
-                DeleteMenu(sysMenu, SC_MAXIMIZE, MF_BYCOMMAND);
-                DeleteMenu(sysMenu, SC_SIZE, MF_BYCOMMAND);//resize
-            }
+            //if (handle != IntPtr.Zero)
+            //{
+            //    DeleteMenu(sysMenu, SC_CLOSE, MF_BYCOMMAND);
+            //    //DeleteMenu(sysMenu, SC_MINIMIZE, MF_BYCOMMAND);
+            //    DeleteMenu(sysMenu, SC_MAXIMIZE, MF_BYCOMMAND);
+            //    DeleteMenu(sysMenu, SC_SIZE, MF_BYCOMMAND);//resize
+            //}
 
             Program pg = new Program();
             pg.Hello();
             Thread th = new Thread(AI);
             th.Start();
-            pg.UserMessage();
+            Console.Write(" Ты:\n".Pastel("#1846e1"));
+            Console.Write("   ");
+            Console.Write($"{CYAN}");
+            Thread  usmess = new Thread(UserMessage);
+            usmess.Start();
 
-
-            Console.Read();
 
         }
         static void Console_CancelKeyPress()
@@ -100,8 +104,8 @@ namespace LouConsoleUI
                 NoFirstItera=true;
                 Console.Write("   ");
                 string[] s = MessageAI.Split('\n'); 
-                for (int i = 1; i < s.Length-1; i++)
-                    Console.Write($"{YELLOW}{s[i]}");
+                foreach(string mess in s.Skip(1))
+                    Console.Write($"{YELLOW}{mess}");
 
             }
             else
@@ -114,25 +118,24 @@ namespace LouConsoleUI
             }
         }
         static string UserQuest = "";
-        void UserMessage()
+        static void UserMessage()
         {
-            Console.Write(" Ты:\n".Pastel("#1846e1"));
-            Console.Write("   ");
-            Console.Write($"{CYAN}");
-            Server sv = new Server();
-            UserQuest = Console.ReadLine();
-            sv.Send(UserQuest);
-            NoFirstItera = false;
+            while (true)
+            {
+                Server sv = new Server();
+                UserQuest = Console.ReadLine();
+                if (UserQuest == "!hide") WIndowApi.Hide();
+                else
+                    sv.Send(UserQuest);
+                NoFirstItera = false;
+            }
         }
-        void UserMessage(bool PythonRecognize, string Message)
+        void UserMessage(string Message)
         {
-            Console.Write(" Ты:\n".Pastel("#1846e1"));
-            Console.Write("   ");
-            Console.Write($"{CYAN}");
-            if (PythonRecognize) Console.WriteLine();
-            Server sv = new Server();
-            UserQuest = Console.ReadLine();
-            sv.Send(UserQuest);
+            if (UserQuest == "")
+            {
+                Console.Write($"{CYAN}{Message}");
+            }
         }
         static void AI()
         {
@@ -159,22 +162,37 @@ namespace LouConsoleUI
             {
                 byte[] buffer = new byte[2024];
                 int bytesRead;
+                Regex regex = new Regex(@"<!1UserREsposeMEssage\)\)>");
+                MatchCollection matches;
+
 
                 while ((bytesRead = process.StandardOutput.BaseStream.Read(buffer, 0, buffer.Length)) > 0)
                 {
+
                     string result = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                    matches = regex.Matches(result);
+
                     if (result == "<1!Endt-Call>EndBott")
                     {
                         pg.AssictentMessage("", true);
-                        pg.UserMessage();
+                        Console.Write(" Ты:\n".Pastel("#1846e1"));
+                        Console.Write("   ");
+                        Console.Write($"{CYAN}");
                     }
-                    if (result == "<!1UserREsposeMEssage))>") pg.UserMessage(true, result.Replace("<!1UserREsposeMEssage))>", ""));
+                    else if (matches.Count > 0)
+                    {
+                        pg.UserMessage(result.Replace("<!1UserREsposeMEssage))>", ""));
+                        result = result.Replace($"<!1UserREsposeMEssage))> {UserQuest}", "");
+                        result = result.Replace("<1!Endt-Call>EndBott", "");
+                        pg.AssictentMessage(result, false);
+                    }
                     else
                     {
                         result = result.Replace($"<!1UserREsposeMEssage))> {UserQuest}", "");
                         result = result.Replace("<1!Endt-Call>EndBott", "");
                         pg.AssictentMessage(result, false);
                     }
+                    UserQuest = "";
                 }
                 //string error;
                 //while ((error = process.StandardError.ReadLine()) != null)
