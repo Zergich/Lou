@@ -165,12 +165,32 @@ namespace LouConsoleUI
                 Regex regex = new Regex(@"<!1UserREsposeMEssage\)\)>");
                 MatchCollection matches;
 
+                Regex regexShow = new Regex(@"<!WermaPOajaxzaca21!>");
+                MatchCollection matchesShow;
+                Regex regexHide = new Regex(@"<!UNIIDHIDEC#RESKODLikeUVB76>");
+                MatchCollection matchesHide;
+                Regex regexClose = new Regex(@"<!@CLoseSystemDADAExit1>");
+                MatchCollection matchesClose;
+
 
                 while ((bytesRead = process.StandardOutput.BaseStream.Read(buffer, 0, buffer.Length)) > 0)
                 {
 
                     string result = Encoding.UTF8.GetString(buffer, 0, bytesRead);
                     matches = regex.Matches(result);
+
+                    matchesShow = regexShow.Matches(result);
+                    matchesHide = regexHide.Matches(result);
+                    matchesClose = regexClose.Matches(result);
+
+                    if (matchesClose.Count > 0)
+                    {
+                        Console_CancelKeyPress();
+                        Environment.Exit(0);     
+                        continue;
+                    }
+                    if (matchesHide.Count > 0){ WIndowApi.Hide(); result = ""; continue;}
+                    if (matchesShow.Count > 0) {WIndowApi.Show(); result = "";  continue;}
 
                     if (result == "<1!Endt-Call>EndBott")
                     {

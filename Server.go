@@ -19,6 +19,13 @@ func handleConnection(conn net.Conn) {
 	// Обработка данных
 	text := string(buf[:n])
 	fmt.Println(" <!1UserREsposeMEssage))>", text)
+	if text == "<!@CLoseSystemDADAExit1>" {
+		fmt.Println("<!@CLoseSystemDADAExit1>")
+	} else if text == "<!UNIIDHIDEC#RESKODLikeUVB76>" {
+		fmt.Println("<!UNIIDHIDEC#RESKODLikeUVB76>")
+	} else if text == "<!WermaPOajaxzaca21!>" {
+		fmt.Println("<!WermaPOajaxzaca21!>")
+	}
 	Quest(text)
 
 	// // Отправляем ответ клиенту

@@ -78,7 +78,13 @@ def execute_cmd(cmd: str):
         text = "Сейч+ас " + num2words(now.hour, lang='ru') + " " + num2words (now.minute, lang='ru')
         print(text)
     elif cmd == "shatdownLM":
+        server.send_message("<!@CLoseSystemDADAExit1>")
         exit(1)
+    elif cmd == "Hide":
+        server.send_message("<!UNIIDHIDEC#RESKODLikeUVB76>")
+    elif cmd == "Show":
+        server.send_message("<!WermaPOajaxzaca21!>")
+
     else: print("sadasdasdasds")
 
 

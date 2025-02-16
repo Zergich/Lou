@@ -20,7 +20,10 @@ namespace LouConsoleUI
         private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
         static public void Hide() => ShowWindow(GetConsoleWindow(), 0);
-        static public void Show() => ShowWindow(GetConsoleWindow(), 5);
+        static public void Show()
+        {
+            ShowWindow(GetConsoleWindow(), 5);
+        }
 
     }
 }
