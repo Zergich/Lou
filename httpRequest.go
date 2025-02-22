@@ -57,9 +57,10 @@ func Quest(quest string) {
 		panic(errAnsver)
 	}
 	//тут кароче надо отправить ответ что заокнчило читать
+	SendPy(Ansver)
 	fmt.Print("<1!Endt-Call>EndBott")
 
-	// errFile := os.WriteFile("1.json", []byte(result), 0644)
+	// errFile := os.WriteFile("1.json", []byte(result), 06aa44)
 	// if errFile != nil {
 	// 	fmt.Println("Ошибка записи файла:", errFile)
 	// }
@@ -110,6 +111,8 @@ func GetSend(message string) (string, error) {
 }
 
 func listenToSSEStream(resp *http.Response) (string, error) {
+
+	// var Selectoffers int = 0
 	defer resp.Body.Close()
 	var FullString string
 	reader := bufio.NewReader(resp.Body)
@@ -134,6 +137,12 @@ func listenToSSEStream(resp *http.Response) (string, error) {
 			// fmt.Println(match[1])
 			fmt.Print(match[1])
 			FullString += match[1]
+			// NedRecognize := strings.Split(FullString, ".")
+			// if strings.Contains(match[1], ".") {
+			//
+			// 	SendPy(NedRecognize[Selectoffers])
+			// 	Selectoffers++
+			// }
 		}
 
 	}

@@ -8,11 +8,14 @@ import config
 import threading
 import time
 import server
+import Voice
 
 #thread = threading.Thread(target=server.Resive)
 #thread.start()
 
 print(f"{config.VA_NAME} (v{config.VA_VER}) начал свою работу ...")
+recive = threading.Thread(target=server.Resive_msg)
+recive.start()
 
 IsActive = False
 def ActimeChoose():

@@ -42,44 +42,18 @@ func handleConnection(conn net.Conn) {
 	conn.Close()
 }
 
-//	func handleSebderCS(conn net.Conn) {
-//		// // Отправляем ответ клиенту
-//
-//		buf := make([]byte, 1024)
-//		_, err := conn.Read(buf)
-//		_, err = conn.Write([]byte("Hello from server!"))
-//		if err != nil {
-//			fmt.Println(err)
-//			return
-//		}
-//
-//
-//		// Закрываем соединение
-//		conn.Close()
-//
-// }
-// func ServerCS() {
-//
-// 	addr, err := net.ResolveTCPAddr("tcp", "localhost:8085")
-// 	if err != nil {
-// 		panic(err)
-// 	}
-//
-// 	listener, err := net.ListenTCP("tcp", addr)
-// 	if err != nil {
-// 		panic(err)
-// 	}
-//
-// 	// fmt.Println("Сервер запущен")
-//
-// 	for {
-// 		conn, err := listener.Accept()
-// 		if err != nil {
-// 			panic(err)
-// 		}
-// 	}
-//
-// }
+func SendPy(text string) {
+	//		Отправляем ответ клиенту
+	conn, err := net.Dial("tcp", "localhost:8081")
+	if err != nil {
+		fmt.Println("Error connecting:", err.Error())
+
+	}
+
+	conn.Write([]byte(text))
+	// Закрываем соединение
+	conn.Close()
+}
 
 func ServerUp() {
 	addr, err := net.ResolveTCPAddr("tcp", "localhost:8080")
